@@ -1,0 +1,34 @@
+const socks5CheckHost = "8.8.8.8";
+const socks5CheckPort = 53;      // UDP 查询端口，不影响真实数据
+const socks5Address = "127.0.0.1";
+const socks5Port = 31086;
+const timeout = 1200;            // 超时 ms
+
+function testSocks5Connection() {
+  return new Promise((resolve) => {
+    // 建立与目标的TCP连接尝试
+    const socket = require('net').connect({host: socks5Address, port: socks5Port}, () => {
+      socket.destroy();
+      resolve(true);
+    });
+    socket.setTimeout(timeout, () => {
+      socket.destroy();
+      resolve(false);
+    });
+    socket.on('error', () => {
+      socket.destroy();
+      resolve(false);
+    });
+  });
+}
+
+(async () => {
+  let ok = await testSocks5Connection();
+
+  if (ok) {
+    $script.setPolicy("lazycat");
+  } else {
+    $script.setPolicy("DIRECT");
+  }
+  $done();
+})();
