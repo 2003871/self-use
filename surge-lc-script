@@ -1,10 +1,1 @@
-let tcp = new TCP('127.0.0.1', 31085, { timeout: 800 });
-tcp.connect()
-  .then(() => {
-    $network.proxy = 'Heiyu';
-    $done();
-  })
-  .catch(() => {
-    $network.proxy = 'DIRECT';
-    $done();
-  });
+
